@@ -1,9 +1,36 @@
 const PROJECT = require("../models/Project");
 const ISSUE = require("../models/Issue");
 
+module.exports.getAllIssues = async function (req, res) {
+  let searchCriteria = {};
+  // Always filter by project ID (assuming it's provided in every request)
+  searchCriteria.project = req.body.project;
+  if (req.body.author) {
+    searchCriteria.author = req.body.author;
+  }
+
+  if (req.body.titleDescription) {
+    searchCriteria.$or = [
+      { title: new RegExp(req.body.titleDescription, "i") },
+      { description: new RegExp(req.body.titleDescription, "i") },
+    ];
+  }
+
+  const issues = await ISSUE.find(searchCriteria);
+
+  const project = await PROJECT.findById(req.body.project).populate("issues");
+  if (issues) {
+    project.issues = issues;
+  }
+
+  res.render("projectDetail", { project });
+};
+
 module.exports.createIssue = async function (req, res) {
   try {
     req.body.completed = false;
+    req.body.labels = req.body.labels.split(",");
+
     const issue = new ISSUE(req.body);
     await issue.save();
 

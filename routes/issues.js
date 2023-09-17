@@ -3,6 +3,9 @@ const router = express.Router();
 const IssueController = require("../controller/issue.controller");
 
 // Form to create a new project
+router.post("/all", IssueController.getAllIssues);
+
+// Form to create a new project
 router.post("/new", IssueController.createIssue);
 
 //get single project details

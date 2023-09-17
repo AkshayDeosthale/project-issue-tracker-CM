@@ -120,9 +120,68 @@
           Last Updated: <%= new Date(project.updatedAt).toLocaleDateString() %>
         </div>
       </div>
+      <div
+        class="search-section p-1 rounded"
+        style="background-color: #f4f5f7 !important"
+      >
+        <h4 class="text-primary mb-3">Search Issues</h4>
+
+        <form action="/issues/all" method="post" class="form-inline">
+          <!-- Hidden input for project._id -->
+          <input type="hidden" name="project" value="<%= project._id %>" />
+          <div class="form-group mb-2 mr-3">
+            <label for="authorSearch" class="sr-only">Search by Author</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-primary text-white"
+                  ><i class="fas fa-user"></i
+                ></span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="authorSearch"
+                name="author"
+                placeholder="Search by Author"
+              />
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <label for="titleDescriptionSearch" class="sr-only"
+              >Search by Title/Description</label
+            >
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-primary text-white"
+                  ><i class="fas fa-search"></i
+                ></span>
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                id="titleDescriptionSearch"
+                name="titleDescription"
+                placeholder="Search by Title/Description"
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary ml-3">Search</button>
+          <span class="ml-2">(Click again to reset.)</span>
+        </form>
+      </div>
       <div class="mt-5">
         <h4>Issues:</h4>
-        <% project.issues.forEach(issue => { %>
+        <% if (project.issues && project.issues.length === 0) { %>
+        <div style="text-align: center; padding: 70px; background-color: white">
+          <p>
+            <i class="fas fa-folder-open fa-2x" style="color: #a3aab1"></i>
+          </p>
+          <p style="color: #586069">
+            No projects exist. Start by creating a new one!
+          </p>
+        </div>
+        <% } else { %> <% project.issues.forEach(issue => { %>
         <div class="issue-item <%= issue.completed ? 'completed-issue' : '' %>">
           <div>
             <span class="issue-title"><%= issue.title %></span>
@@ -130,6 +189,11 @@
               Submitted by: <%= issue.author %> on <%= new
               Date(issue.createdAt).toLocaleDateString() %>
             </div>
+            <p class="mt-2">
+              <% issue.labels.forEach(label => { %>
+              <span class="mr-2 badge badge-secondary"><%= label %></span>
+              <% }); %>
+            </p>
           </div>
           <div style="display: flex; gap: 15px; align-items: center">
             <label class="switch">
@@ -155,6 +219,7 @@
             </a>
           </div>
         </div>
+
         <!-- Edit Issue Modal -->
         <div
           class="modal fade"
@@ -232,7 +297,8 @@
             </div>
           </div>
         </div>
-        <% }); %>
+
+        <% }); %> <% } %>
       </div>
       <a
         data-toggle="modal"

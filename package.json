@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "build": "babel index.js --out-file dist/index.js",
+    "deploy": "npm install && npm run build"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +17,10 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "mongoose": "^7.5.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.22.15",
+    "@babel/core": "^7.22.20",
+    "@babel/preset-env": "^7.22.20"
   }
 }

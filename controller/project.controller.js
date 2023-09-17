@@ -37,7 +37,6 @@ module.exports.addProject = async function (req, res) {
       name: req.body.name,
       description: req.body.description,
       author: req.body.author,
-      issues: [demoIssue._id],
     });
     const demoIssue = new ISSUE({
       title: "You can manage your Issues here.",
@@ -48,6 +47,7 @@ module.exports.addProject = async function (req, res) {
       completed: true,
       project: project._id,
     });
+    project.issues = [demoIssue._id];
     await demoIssue.save();
     await project.save();
     res.redirect("/");
