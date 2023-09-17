@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+
+    <style>
+      body {
+        background-color: #f6f8fa;
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica,
+          Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+      }
+      .gh-card {
+        background-color: #ffffff;
+        border-radius: 5px;
+        border: 1px solid #e1e4e8;
+        padding: 20px;
+      }
+      .gh-btn {
+        background-color: #2ea44f;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-weight: 600;
+        padding: 6px 12px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+      }
+      .gh-btn:hover {
+        background-color: #2a8f47;
+      }
+      .project-item {
+        padding: 15px 20px;
+        border: 1px solid #e1e4e8;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        background-color: #ffffff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s, box-shadow 0.2s;
+      }
+      .project-item:hover {
+        background-color: #f3f4f6;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      }
+      .project-info {
+        display: flex;
+        flex-direction: column;
+      }
+      .project-meta {
+        color: #586069;
+        font-size: 0.9rem;
+      }
+      .detail-btn {
+        background-color: #e1e4e8;
+        padding: 6px 12px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #24292e;
+        transition: background-color 0.2s;
+      }
+      .detail-btn:hover {
+        background-color: #d1d5da;
+      }
+      .delete-btn {
+        background-color: #ea4a5a;
+        padding: 6px 12px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #ffffff;
+        transition: background-color 0.2s;
+        margin-left: 10px;
+      }
+      .delete-btn:hover {
+        background-color: #d73a49;
+      }
+      .project-actions {
+        display: flex;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Projects</h2>
+      <div class="gh-card">
+        <ul class="list-unstyled">
+          <% if(projects && projects.length > 0) { %> <%
+          projects.forEach(project => { %>
+          <li class="project-item">
+            <div class="project-info">
+              <strong><%= project.name %></strong>
+              <span class="project-meta">
+                Created on: <%= new Date(project.createdAt).toLocaleDateString()
+                %> by <%= project.author %>
+              </span>
+            </div>
+            <div style="display: flex; gap: 15px">
+              <a class="detail-btn" href="/projects/<%= project._id %>">
+                Details <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+              <a
+                class="delete-btn"
+                href="/projects/delete/<%= project._id %>"
+                onclick="return confirm('Are you sure you want to delete this project?')"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </div>
+          </li>
+          <% }); %> <% } else { %>
+          <div style="text-align: center; padding: 70px">
+            <p>
+              <i class="fas fa-folder-open fa-2x" style="color: #a3aab1"></i>
+            </p>
+            <p style="color: #586069">
+              No projects exist. Start by creating a new one!
+            </p>
+          </div>
+          <% } %>
+        </ul>
+        <a class="gh-btn" href="/projects/new">Create a New Project</a>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
