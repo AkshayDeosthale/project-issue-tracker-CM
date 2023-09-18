@@ -2,11 +2,22 @@ const PROJECT = require("../models/Project");
 const ISSUE = require("../models/Issue");
 
 module.exports.getAllIssues = async function (req, res) {
-  let searchCriteria = {};
-  // Always filter by project ID (assuming it's provided in every request)
-  searchCriteria.project = req.body.project;
+  const projectId = req.body.project;
+
+  if (!projectId) {
+    return res.status(400).send("Project ID is required.");
+  }
+
+  let searchCriteria = {
+    project: projectId, // Always filter by project ID
+  };
+
   if (req.body.author) {
     searchCriteria.author = req.body.author;
+  }
+
+  if (req.body.labels) {
+    searchCriteria.labels = { $in: req.body.labels.split(",") };
   }
 
   if (req.body.titleDescription) {
@@ -16,9 +27,16 @@ module.exports.getAllIssues = async function (req, res) {
     ];
   }
 
+  // Fetch issues specific to the provided projectId and matching the search criteria
   const issues = await ISSUE.find(searchCriteria);
 
-  const project = await PROJECT.findById(req.body.project).populate("issues");
+  // Fetch project details by its projectId
+  const project = await PROJECT.findById(projectId);
+
+  if (!project) {
+    return res.status(404).send("Project not found.");
+  }
+
   if (issues) {
     project.issues = issues;
   }
@@ -48,6 +66,7 @@ module.exports.createIssue = async function (req, res) {
 
 module.exports.modifyIssue = async function (req, res) {
   try {
+    req.body.labels = req.body.labels.split(",");
     const issue = await ISSUE.findByIdAndUpdate(req.params.id, req.body);
   } catch (error) {
     console.log(error);
